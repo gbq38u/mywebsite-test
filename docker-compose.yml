@@ -1,11 +1,26 @@
-version: "3.8"         
-
-services:                    
-  web:                      
-    image: nginx:alpine   
-    container_name: my_web  
+services:
+  web:
+    image: php:7.4-apache
+    container_name: my_web
     ports:
-      - "8080:80" 
+      - "8080:80"
     volumes:
-      - ./html:/usr/share/nginx/html            
+      - ./app:/var/www/html
+    depends_on:
+      - db
+    command: >
+      bash -c "docker-php-ext-install mysqli && apache2-foreground"
 
+  db:
+    image: mysql:5.7
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: test_db
+      MYSQL_USER: devuser
+      MYSQL_PASSWORD: devpass
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
