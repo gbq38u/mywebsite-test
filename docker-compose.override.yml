@@ -1,0 +1,10 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: myapp:dev
+    volumes:
+      - ./app:/usr/share/nginx/html
+    ports:
+      - "8000:80"

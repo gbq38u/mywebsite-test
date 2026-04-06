@@ -1,40 +1,8 @@
 services:
   app:
-    image: "nginx:${NGINX_VERSION}"
-    container_name: ${CONTAINER_NAME}
-    profiles:
-      - dev
-      - test
-      - adminer
-      - cache
-      - test-runner
-  db:
-    image: python:3.9-alpine
-    command: tail -f /dev/null
-    container_name: api
-    profiles:
-      - dev
-      - test
-      - adminer
-      - cache
-      - test-runner
-  adminer: 
-    image: postgres:13-alpine
-    environment:
-      POSTGRES_PASSWORD: example
-    profiles:
-      - dev
-      - test
-  cache:
-    image: redis:alpine
-    container_name: cashe
-    profiles:
-      - dev
-      - prod
-  test-runner:
-    profiles:
-      - test
-
-  
-
-      
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    image: myapp:prod
+    ports:
+      - "8080:80"
