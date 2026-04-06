@@ -1,40 +1,40 @@
 services:
-  web:
+  app:
     image: "nginx:${NGINX_VERSION}"
     container_name: ${CONTAINER_NAME}
-    ports:
-      - "${HOST_PORT}:80"
-    volumes:
-      - ./html:/usr/share/nginx/html
-    networks:
-      - public_network 
-      - app_network
-  api:
+    profiles:
+      - dev
+      - test
+      - adminer
+      - cache
+      - test-runner
+  db:
     image: python:3.9-alpine
     command: tail -f /dev/null
     container_name: api
-    networks:
-      - app_network
-      - db_network
-  db: 
+    profiles:
+      - dev
+      - test
+      - adminer
+      - cache
+      - test-runner
+  adminer: 
     image: postgres:13-alpine
     environment:
       POSTGRES_PASSWORD: example
-    container_name: db
-    networks:
-      - db_network
+    profiles:
+      - dev
+      - test
   cache:
     image: redis:alpine
     container_name: cashe
-    networks:
-      - db_network
-networks:
-  public_network:
-    external: true
-  app_network:
-    driver: bridge
-  db_network:
-    driver: bridge
+    profiles:
+      - dev
+      - prod
+  test-runner:
+    profiles:
+      - test
+
   
 
       
